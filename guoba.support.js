@@ -6,22 +6,22 @@ import { pluginRoot } from "./model/path.js";
 export function supportGuoba() {
   return {
     pluginInfo: {
-      name: 'imgS-plugin',
-      title: '以图搜源插件',
-      author: ['@erzaozi', '@CikeyQi'],
-      authorLink: ['https://github.com/erzaozi', 'https://github.com/CikeyQi'],
-      link: 'https://github.com/erzaozi/imgS-plugin',
+      name: "imgS-plugin",
+      title: "以图搜源插件",
+      author: [ "@erzaozi", "@CikeyQi" ],
+      authorLink: [ "https://github.com/erzaozi", "https://github.com/CikeyQi" ],
+      link: "https://github.com/erzaozi/imgS-plugin",
       isV3: true,
       isV2: false,
       showInMenu: true,
-      description: '基于 Yunzai 的以图搜源插件',
+      description: "基于 Yunzai 的以图搜源插件",
       // 显示图标，此为个性化配置
       // 图标可在 https://icon-sets.iconify.design 这里进行搜索
-      icon: 'twemoji:magnifying-glass-tilted-left',
+      icon: "twemoji:magnifying-glass-tilted-left",
       // 图标颜色，例：#FF0000 或 rgb(255, 0, 0)
-      iconColor: '#d19f56',
+      iconColor: "#d19f56",
       // 如果想要显示成图片，也可以填写图标路径（绝对路径）
-      iconPath: path.join(pluginRoot, 'resources/readme/girl.png'),
+      iconPath: path.join(pluginRoot, "resources/readme/girl.png"),
     },
     configInfo: {
       schemas: [
@@ -40,7 +40,7 @@ export function supportGuoba() {
           component: "Select",
           componentProps: {
             options: [
-              { label: "SauceNAO", value: 'SauceNAO' },
+              { label: "SauceNAO", value: "SauceNAO" },
               { label: "Ascii2d", value: "Ascii2d" },
               { label: "IqDB", value: "IqDB" },
               { label: "Yandex", value: "Yandex" },
@@ -54,16 +54,16 @@ export function supportGuoba() {
           },
         },
         {
-          field: 'next',
-          label: '自动切换搜图引擎',
+          field: "next",
+          label: "自动切换搜图引擎",
           component: "Select",
-          bottomHelpMessage: '选择无结果时切换的搜图引擎',
+          bottomHelpMessage: "选择无结果时切换的搜图引擎",
           componentProps: {
             allowAdd: true,
             allowDel: true,
-            mode: 'multiple',
+            mode: "multiple",
             options: [
-              { label: "SauceNAO", value: 'SauceNAO' },
+              { label: "SauceNAO", value: "SauceNAO" },
               { label: "Ascii2d", value: "Ascii2d" },
               { label: "IqDB", value: "IqDB" },
               { label: "Yandex", value: "Yandex" },
@@ -108,7 +108,7 @@ export function supportGuoba() {
           bottomHelpMessage: "代理服务器地址",
           component: "Input",
           componentProps: {
-            placeholder: '请输入代理地址',
+            placeholder: "请输入代理地址",
           },
         },
         {
@@ -117,7 +117,7 @@ export function supportGuoba() {
           bottomHelpMessage: "代理服务器端口",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入代理端口',
+            placeholder: "请输入代理端口",
             min: 1,
             max: 65535,
             step: 1,
@@ -137,7 +137,7 @@ export function supportGuoba() {
           bottomHelpMessage: "当结果小于此值时，将舍弃该结果（0-100）",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入相似度限制',
+            placeholder: "请输入相似度限制",
             min: 0,
             max: 100,
             step: 1,
@@ -148,6 +148,15 @@ export function supportGuoba() {
           label: "隐藏敏感内容",
           bottomHelpMessage: "是否隐藏敏感内容",
           component: "Switch",
+        },
+        {
+          field: "SauceNAO.api_key",
+          label: "API_KEY",
+          bottomHelpMessage: "用于突破游客次数上限，于https://saucenao.com/user.php?page=search-api获取",
+          component: "Input",
+          componentProps: {
+            placeholder: "请输入SauceNAO的API",
+          },
         },
         {
           component: "Divider",
@@ -163,7 +172,7 @@ export function supportGuoba() {
           bottomHelpMessage: "仅显示前 N 个结果",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入结果数限制',
+            placeholder: "请输入结果数限制",
             min: 0,
             max: 100,
             step: 1,
@@ -176,7 +185,7 @@ export function supportGuoba() {
           component: "Select",
           componentProps: {
             options: [
-              { label: "色彩搜索", value: 'color' },
+              { label: "色彩搜索", value: "color" },
               { label: "特征搜索", value: "bovw" },
             ],
           },
@@ -202,8 +211,8 @@ export function supportGuoba() {
           component: "Select",
           componentProps: {
             options: [
-              { label: "IqDB", value: '2d' },
-              { label: "3D IqDB", value: '3d' },
+              { label: "IqDB", value: "2d" },
+              { label: "3D IqDB", value: "3d" },
             ],
           },
         },
@@ -213,7 +222,7 @@ export function supportGuoba() {
           bottomHelpMessage: "当结果小于此值时，将舍弃该结果（0-100）",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入相似度限制',
+            placeholder: "请输入相似度限制",
             min: 0,
             max: 100,
             step: 1,
@@ -239,7 +248,7 @@ export function supportGuoba() {
           bottomHelpMessage: "仅显示前 N 个结果",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入结果数限制',
+            placeholder: "请输入结果数限制",
             min: 0,
             max: 100,
             step: 1,
@@ -251,7 +260,7 @@ export function supportGuoba() {
           bottomHelpMessage: "用于绕过Yandex的人机验证",
           component: "Input",
           componentProps: {
-            placeholder: '请输入Yandex的Cookie',
+            placeholder: "请输入Yandex的Cookie",
           },
         },
         {
@@ -268,7 +277,7 @@ export function supportGuoba() {
           bottomHelpMessage: "当结果小于此值时，将舍弃该结果（0-100）",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入相似度限制',
+            placeholder: "请输入相似度限制",
             min: 0,
             max: 100,
             step: 1,
@@ -295,7 +304,7 @@ export function supportGuoba() {
           component: "Select",
           componentProps: {
             options: [
-              { label: "通用识别场景[gochiusa]", value: 'large_model_preview' },
+              { label: "通用识别场景[gochiusa]", value: "large_model_preview" },
               { label: "低准确率动漫模型", value: "anime" },
               { label: "高级动画模型[lovelive]", value: "anime_model_lovelive" },
               { label: "高级动画模型[yamanosusume]", value: "pre_stable" },
@@ -337,8 +346,8 @@ export function supportGuoba() {
           component: "Select",
           componentProps: {
             options: [
-              { label: "E-Hentai", value: 'eh' },
-              { label: "ExHentai", value: 'ex' },
+              { label: "E-Hentai", value: "eh" },
+              { label: "ExHentai", value: "ex" },
             ],
           },
         },
@@ -366,7 +375,7 @@ export function supportGuoba() {
           bottomHelpMessage: "用于访问ExHentai站点权限，请确保你的账号有权访问里站",
           component: "Input",
           componentProps: {
-            placeholder: '请输入EHentai的Cookie',
+            placeholder: "请输入EHentai的Cookie",
           },
         },
         {
@@ -383,7 +392,7 @@ export function supportGuoba() {
           bottomHelpMessage: "仅显示前 N 个结果",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入结果数限制',
+            placeholder: "请输入结果数限制",
             min: 0,
             max: 100,
             step: 1,
@@ -403,7 +412,7 @@ export function supportGuoba() {
           bottomHelpMessage: "仅显示前 N 个结果",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入结果数限制',
+            placeholder: "请输入结果数限制",
             min: 0,
             max: 100,
             step: 1,
@@ -429,7 +438,7 @@ export function supportGuoba() {
           bottomHelpMessage: "当结果小于此值时，将舍弃该结果（0-100）",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入相似度限制',
+            placeholder: "请输入相似度限制",
             min: 0,
             max: 100,
             step: 1,
@@ -441,7 +450,7 @@ export function supportGuoba() {
           bottomHelpMessage: "仅显示前 N 个结果",
           component: "InputNumber",
           componentProps: {
-            placeholder: '请输入结果数限制',
+            placeholder: "请输入结果数限制",
             min: 0,
             max: 100,
             step: 1,
@@ -455,13 +464,13 @@ export function supportGuoba() {
 
       setConfigData(data, { Result }) {
         let config = {}
-        for (let [keyPath, value] of Object.entries(data)) {
+        for (let [ keyPath, value ] of Object.entries(data)) {
           lodash.set(config, keyPath, value)
         }
         config = lodash.merge({}, Config.getConfig(), config)
-        config.next = data['next']
+        config.next = data["next"]
         Config.setConfig(config)
-        return Result.ok({}, '保存成功~')
+        return Result.ok({}, "保存成功~")
       },
     },
   }

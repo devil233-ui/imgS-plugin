@@ -1,28 +1,30 @@
-import fetch from 'node-fetch';
-import { FormData } from 'formdata-polyfill/esm.min.js';
-import { load } from 'cheerio';
-import _ from 'lodash';
-import Config from './Config.js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch from "node-fetch";
+import { FormData } from "formdata-polyfill/esm.min.js";
+import { load } from "cheerio";
+import _ from "lodash";
+import Config from "./Config.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
-const BASE_URL = 'https://saucenao.com';
+const BASE_URL = "https://saucenao.com";
 
 async function SauceNAO(url) {
     let form = new FormData();
-    form.append('url', url);
+    form.append("url", url);
 
     const hide = await Config.getConfig().SauceNAO.hide;
+    const apiKey = await Config.getConfig().SauceNAO.api_key;
 
-    if (hide) form.append('hide', '3');
+    if (hide) form.append("hide", "3");
+    if (apiKey) form.append("api_key", apiKey);
 
     let agent = null
     if (Config.getConfig().proxy.enable) {
-        let proxy = 'http://' + Config.getConfig().proxy.host + ':' + Config.getConfig().proxy.port
+        let proxy = "http://" + Config.getConfig().proxy.host + ":" + Config.getConfig().proxy.port
         agent = new HttpsProxyAgent(proxy)
     }
 
     const response = await fetch(`${BASE_URL}/search.php`, {
-        method: 'POST',
+        method: "POST",
         body: form,
         agent: agent,
     }).then((res) => res.text());
@@ -32,15 +34,15 @@ async function SauceNAO(url) {
 
 function parse(body) {
     const $ = load(body, { decodeEntities: true });
-    return _.map($('.result'), (result) => {
-        const image = $('.resultimage img', result);
-        const title = $('.resulttitle', result);
-        const similarity = $('.resultsimilarityinfo', result);
-        const misc = $('.resultmiscinfo > a', result);
-        const content = $('.resultcontentcolumn > *', result);
+    return _.map($(".result"), (result) => {
+        const image = $(".resultimage img", result);
+        const title = $(".resulttitle", result);
+        const similarity = $(".resultsimilarityinfo", result);
+        const misc = $(".resultmiscinfo > a", result);
+        const content = $(".resultcontentcolumn > *", result);
         if (title.length <= 0) return;
 
-        const imageUrl = image.attr('data-src2') ?? image.attr('data-src') ?? image.attr('src') ?? '';
+        const imageUrl = image.attr("data-src2") ?? image.attr("data-src") ?? image.attr("src") ?? "";
 
         return {
             image: imageUrl,

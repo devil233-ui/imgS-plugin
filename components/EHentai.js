@@ -1,22 +1,22 @@
-import fetch from 'node-fetch';
-import { fileFromSync } from 'fetch-blob/from.js';
-import { FormData } from 'formdata-polyfill/esm.min.js';
-import downloadImage from '../utils/download.js';
-import { load } from 'cheerio';
-import _ from 'lodash';
-import Config from './Config.js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch from "node-fetch";
+import { fileFromSync } from "fetch-blob/from.js";
+import { FormData } from "formdata-polyfill/esm.min.js";
+import downloadImage from "../utils/download.js";
+import { load } from "cheerio";
+import _ from "lodash";
+import Config from "./Config.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 const BASE_URLs = {
-    eh: 'https://upld.e-hentai.org/image_lookup.php',
-    ex: 'https://exhentai.org/upld/image_lookup.php'
+    eh: "https://upld.e-hentai.org/image_lookup.php",
+    ex: "https://exhentai.org/upld/image_lookup.php"
 };
 
 async function EHentai(url) {
     const imagePath = await downloadImage(url);
 
     const form = new FormData();
-    form.append('sfile', fileFromSync(imagePath));
+    form.append("sfile", fileFromSync(imagePath));
     return await request(form);
 }
 
@@ -30,29 +30,29 @@ async function request(form) {
 
     let agent = null
     if (Config.getConfig().proxy.enable) {
-        let proxy = 'http://' + Config.getConfig().proxy.host + ':' + Config.getConfig().proxy.port
+        let proxy = "http://" + Config.getConfig().proxy.host + ":" + Config.getConfig().proxy.port
         agent = new HttpsProxyAgent(proxy)
     }
 
-    form.append('f_sfile', 'search');
-    if (cover) form.append('fs_covers', 'on');
-    if (similar) form.append('fs_similar', 'on');
-    if (deleted) form.append('fs_exp', 'on');
+    form.append("f_sfile", "search");
+    if (cover) form.append("fs_covers", "on");
+    if (similar) form.append("fs_similar", "on");
+    if (deleted) form.append("fs_exp", "on");
 
     let response;
-    if (site === 'eh') {
-        response = await fetch(BASE_URLs['eh'], {
-            method: 'POST',
+    if (site === "eh") {
+        response = await fetch(BASE_URLs["eh"], {
+            method: "POST",
             body: form,
             agent: agent,
         }).then(res => res.text());
     }
 
-    if (site === 'ex') {
-        response = await fetch(BASE_URLs['ex'], {
-            method: 'POST',
+    if (site === "ex") {
+        response = await fetch(BASE_URLs["ex"], {
+            method: "POST",
             body: form,
-            headers: { Cookie: EH_COOKIE || '' },
+            headers: { Cookie: EH_COOKIE || "" },
             agent: agent,
         }).then(res => res.text());
     }
@@ -61,14 +61,14 @@ async function request(form) {
 
 function parse(body) {
     const $ = load(body);
-    return _.map($('.gltc > tbody > tr'), (result, index) => {
+    return _.map($(".gltc > tbody > tr"), (result, index) => {
         if (index !== 0) {
-            const title = $('.glink', result),
-                [image] = $('.glthumb img', result),
-                [link] = $('.gl3c a', result),
-                type = $('.gl1c .cn', result),
-                date = $('.gl2c [id^=posted]', result).eq(0),
-                tags = $('.gl3c .gt', result);
+            const title = $(".glink", result),
+                [ image ] = $(".glthumb img", result),
+                [ link ] = $(".gl3c a", result),
+                type = $(".gl1c .cn", result),
+                date = $(".gl2c [id^=posted]", result).eq(0),
+                tags = $(".gl3c .gt", result);
             return {
                 title: title.text(),
                 image: image.attribs.src,

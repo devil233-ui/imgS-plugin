@@ -13,6 +13,7 @@ proxy:
 SauceNAO:
   similarity: 80
   hide: false
+  api_key: ""
 Ascii2d:
   results: 3
   type: color

@@ -1,16 +1,16 @@
-import fetch from 'node-fetch';
-import { fileFromSync } from 'fetch-blob/from.js';
-import { FormData } from 'formdata-polyfill/esm.min.js';
-import downloadImage from '../utils/download.js';
-import Config from './Config.js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import { load } from 'cheerio';
+import fetch from "node-fetch";
+import { fileFromSync } from "fetch-blob/from.js";
+import { FormData } from "formdata-polyfill/esm.min.js";
+import downloadImage from "../utils/download.js";
+import Config from "./Config.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import { load } from "cheerio";
 
-const BAIDU_GRAPH_URL = 'https://graph.baidu.com/upload';
+const BAIDU_GRAPH_URL = "https://graph.baidu.com/upload?tn=pc&from=pc&image_source=PC_UPLOAD_SEARCH_FILE";
 
 function extractCardData(html) {
     const $ = load(html);
-    const scriptContent = $('script').filter((_, script) => $(script).html().includes('window.cardData')).html();
+    const scriptContent = $("script").filter((_, script) => $(script).html().includes("window.cardData")).html();
     const match = scriptContent?.match(/window\.cardData\s*=\s*(.*?);/s);
     return match ? JSON.parse(match[1]) : null;
 }
@@ -20,29 +20,33 @@ async function Baidu(url) {
     let response, cardData;
 
     const form = new FormData();
-    form.append('image', fileFromSync(imagePath));
+    form.append("image", fileFromSync(imagePath), "image.jpg");
 
-    let agent = null
+    let agent = null;
     if (Config.getConfig().proxy.enable) {
-        let proxy = 'http://' + Config.getConfig().proxy.host + ':' + Config.getConfig().proxy.port
-        agent = new HttpsProxyAgent(proxy)
+        let proxy = "http://" + Config.getConfig().proxy.host + ":" + Config.getConfig().proxy.port;
+        agent = new HttpsProxyAgent(proxy);
     }
 
     try {
         response = await fetch(BAIDU_GRAPH_URL, {
-            method: 'POST',
+            method: "POST",
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "Referer": "https://graph.baidu.com/"
+            },
             body: form,
             agent: agent,
         });
 
         const jsonResponse = await response.json();
         if (jsonResponse.status !== 0) {
-            throw new Error('返回状态异常 ' + jsonResponse.status);
+            throw new Error("返回状态异常 " + jsonResponse.status);
         }
 
-        const nextUrl = jsonResponse.data.url + '&tpl_from=pc';
+        const nextUrl = jsonResponse.data.url + "&tpl_from=pc";
 
-        response = await fetch(nextUrl, { method: 'GET', agent: agent });
+        response = await fetch(nextUrl, { method: "GET", agent: agent });
         cardData = extractCardData(await response.text());
 
         if (!cardData) {
@@ -50,13 +54,13 @@ async function Baidu(url) {
         }
 
         for (const card of cardData) {
-            if (card.cardName === 'same') {
-                return card.tplData.list
+            if (card.cardName === "same") {
+                return card.tplData.list;
             }
         }
         return [];
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message, { cause: error });
     }
 }
 

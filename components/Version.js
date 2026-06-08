@@ -1,12 +1,12 @@
-import fs from 'fs'
+import fs from "fs"
 import {pluginRoot} from "../model/path.js";
 
-let packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
-let pluginPackageJson = JSON.parse(fs.readFileSync(`${pluginRoot}/package.json`,'utf8'))
+let packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
+let pluginPackageJson = JSON.parse(fs.readFileSync(`${pluginRoot}/package.json`,"utf8"))
 
 const yunzaiVersion = packageJson.version
 const pluginVersion = pluginPackageJson.version
-const isMiao = packageJson.name === 'miao-yunzai'
+const isMiao = packageJson.name === "miao-yunzai"
 const isTrss = Array.isArray(Bot.uin) ? true : false
 
 let Version = {

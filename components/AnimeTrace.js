@@ -1,45 +1,51 @@
-import fetch from 'node-fetch';
-import { fileFromSync } from 'fetch-blob/from.js';
-import { FormData } from 'formdata-polyfill/esm.min.js';
-import downloadImage from '../utils/download.js';
-import Config from './Config.js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import Jimp from 'jimp';
+import fetch from "node-fetch";
+import { fileFromSync } from "fetch-blob/from.js";
+import { FormData } from "formdata-polyfill/esm.min.js";
+import downloadImage from "../utils/download.js";
+import Config from "./Config.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import https from "https";
+import Jimp from "jimp";
 
-const BASE_URL = 'https://api.animetrace.com/v1/search';
+const BASE_URL = "https://api.animetrace.com/v1/search";
 
 async function AnimeTrace(url) {
     const imagePath = await downloadImage(url);
 
     const form = new FormData();
-    form.append('image', fileFromSync(imagePath));
+    form.append("image", fileFromSync(imagePath));
     return await request(form, imagePath);
 }
 
 async function request(form, imagePath) {
-
-    let agent = null
+    let agent = null;
     if (Config.getConfig().proxy.enable) {
-        let proxy = 'http://' + Config.getConfig().proxy.host + ':' + Config.getConfig().proxy.port
-        agent = new HttpsProxyAgent(proxy)
+        let proxy = "http://" + Config.getConfig().proxy.host + ":" + Config.getConfig().proxy.port;
+        agent = new HttpsProxyAgent(proxy);
+    } else {
+        agent = new https.Agent({ family: 4, rejectUnauthorized: false });
     }
 
     const model = Config.getConfig().AnimeTrace.model;
     const mode = Config.getConfig().AnimeTrace.mode;
 
     const response = await fetch(
-        `${BASE_URL}?model=${model ? model : 'anime'}&force_one=${mode ? mode : 1}`,
+        `${BASE_URL}?model=${model ? model : "anime"}&force_one=${mode ? mode : 1}`,
         {
-            method: 'POST',
-            body: form
+            method: "POST",
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+            },
+            body: form,
+            agent: agent
         }
     ).then(res => res.json());
 
-    if (response.code === 0) {
+    if (response.code === 0 && response.data) {
         return await parse(response.data, imagePath);
     } else {
         console.log(response);
-        throw new Error('请求失败');
+        throw new Error("请求失败，接口未返回有效数据");
     }
 }
 
@@ -60,11 +66,11 @@ async function parse(response, imagePath) {
                     width * (box[2] - box[0]),
                     height * (box[3] - box[1])
                 );
-                response[i].preview = (await newImage.getBase64Async(Jimp.AUTO)).split(',')[1];
+                response[i].preview = (await newImage.getBase64Async(Jimp.AUTO)).split(",")[1];
             }
         } catch (error) {
             for (let i = 0; i < response.length; i++) {
-                response[i].preview = 'fail unsupport image type';
+                response[i].preview = "fail unsupport image type";
             }
         }
     }
